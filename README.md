@@ -5,3 +5,7 @@ To run:
 1. Run the bat files
 	- `mute_for_3_days.bat` to mute listed chats for 3 days
 	- `unmute_now.bat` to imidiately unmute listed chats
+	
+CMD Arguments:
+- `-d`, `-hr`, `-m`  - how many days/hour/minutes to mute for
+- `-u` - unmute chats instead of muting
