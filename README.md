@@ -9,3 +9,5 @@ To run:
 CMD Arguments:
 - `-d`, `-hr`, `-m`  - how many days/hour/minutes to mute for
 - `-u` - unmute chats instead of muting
+
+Initial launch will require a login (it creates my.session file), subsequent launches will not.
