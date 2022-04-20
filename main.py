@@ -29,35 +29,30 @@ def get_mute_until(mute_for):
     return current_time + delta
 
 async def main():
+    # If mute_until is not None, mute chats until that date. Else unmute the chats.
+    async def process_chats(chats, mute_until):
+        if mute_until:
+            print('Muting until %s' % (mute_until + datetime.timedelta(hours=3)).strftime("%b %d %Y %H:%M"))
+        else:
+            print('Unmuting chats')
+
+        for chat in chats:
+            result = await client(functions.account.UpdateNotifySettingsRequest(
+                peer=chat,
+                settings=types.InputPeerNotifySettings(
+                    mute_until=mute_until,
+            )))
+            print('Succesfully processed %s' % chat)
+
     api_id, api_hash, chats_to_mute = read_config()
     unmute, days, hours, minutes = read_arguments()
     mute_for = { 'days': days, 'hours': hours, 'minutes': minutes }
-    mute_until = get_mute_until(mute_for)
+    mute_until = None
+    if not unmute:
+        mute_until = get_mute_until(mute_for)
 
     async with TelegramClient('my', api_id, api_hash) as client:
         await client.get_dialogs()
-
-        if unmute:
-            # Unmuting chats
-            print('Unmuting chats')
-            for chat in chats_to_mute:
-                result = await client(functions.account.UpdateNotifySettingsRequest(
-                    peer=chat,
-                    settings=types.InputPeerNotifySettings(
-                        mute_until=None,
-                )))
-                if result:
-                    print('Succesfully unmuted %s' % chat)
-        else:
-            #Muting chats
-            print('Muting until %s' % (mute_until + datetime.timedelta(hours=3)).strftime("%b %d %Y %H:%M"))
-            for chat in chats_to_mute:
-                result = await client(functions.account.UpdateNotifySettingsRequest(
-                    peer=chat,
-                    settings=types.InputPeerNotifySettings(
-                        mute_until=mute_until,
-                )))
-                if result:
-                    print('Succesfully muted %s' % chat)
+        await process_chats(chats_to_mute, mute_until)
 
 asyncio.run(main())
