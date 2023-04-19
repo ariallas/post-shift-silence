@@ -1,0 +1,6 @@
+[api]
+api_id=123
+api_hash=456
+
+[settings]
+channels=Чат 1,Чат 2,Чат 3

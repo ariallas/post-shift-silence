@@ -1,2 +1,2 @@
-python main.py -d 3
+python main.py -d 2 -hr 21
 pause
